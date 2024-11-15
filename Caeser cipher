@@ -1,3 +1,10 @@
+#How It Works Overall
+#The user is prompted to enter a 6-digit number and a shift value.
+#The code validates these inputs, ensuring they are integers and properly formatted.
+#The digits of the number are shifted by the given value using the shift_digits method.
+#The original and shifted numbers are stored as a pair in the database.
+#The encrypted results are displayed, and the user can see all stored combinations.
+
 database = [["", ""]]  # Start with a blank entry for initialization
 
 class caeser_cipher:
