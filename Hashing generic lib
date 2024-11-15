@@ -1,0 +1,46 @@
+#HASHING 101 BABY
+from docx import Document
+from Crypto.Hash import SHA256
+
+# Load the document
+doc = Document("Human factors week 4+.docx")
+
+# Extract all the text into a single list or string
+content = []
+for paragraph in doc.paragraphs:
+    content.append(paragraph.text)
+
+# Join the paragraphs into one string
+file_contents = "\n".join(content)
+
+# Define the class to handle hashing
+class Hashers:
+    def __init__(self, hash_value=None):
+        self.hash_value = hash_value
+
+    def hashing_algorithm(self):
+        # Hash the file contents using SHA-256
+        hasher = SHA256.new()  # Create a new SHA-256 hash object
+        hasher.update(file_contents.encode())  # Encode the text to bytes and update the hash object
+        return hasher.hexdigest()  # Return the hexadecimal representation of the hash
+
+    def combination(self, hash_value):
+        # Combine file contents and hash, return as string
+        global file_contents
+        combine = file_contents + hash_value
+        return str(combine)  # Return combined value as string
+
+# Example Usage
+hasher = Hashers()
+hashed_output = hasher.hashing_algorithm()  # Hash the contents of the document
+print(f"Hashed Output: {hashed_output}")
+
+# Combine file contents with the hash (optional)
+combined_result = hasher.combination(hashed_output)
+print(f"Combined Output: {combined_result}")
+
+
+# over all todo list
+#import or create our hash (can use a lib, try both options)
+#apply the hash to the file_contents-
+#return this hashed output, no way to undo it is the aim.
