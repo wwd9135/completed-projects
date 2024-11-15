@@ -1,0 +1,52 @@
+database = [["", ""]]  # Start with a blank entry for initialization
+
+class caeser_cipher:
+    def __init__(self, caeser=None, shift=None):
+        self.caeser = caeser
+        self.shift = shift
+
+    def shifty(self):
+        while True:
+            # Input for the 6-digit number with validation
+            try:
+                caesersss = int(input("Enter a 6-digit number you'd like to encrypt: "))
+                if len(str(caesersss)) != 6:
+                    print("Error: Please enter exactly a 6-digit number.")
+                    continue
+            except ValueError:
+                print("Error: Please enter a valid integer.")
+                continue
+
+            # Input for the shift amount with validation
+            try:
+                shifts = int(input("Enter the number of digits you would like to shift your caeser by: "))
+            except ValueError:
+                print("Error: Please enter a valid integer for the shift.")
+                continue
+
+            # Perform the shifting
+            shifted = self.shift_digits(caesersss, shifts)
+            print(f"Original: {caesersss}, Shifted: {shifted}")
+
+            # Add the combination to the database
+            combination = [caesersss, shifted]
+            database.append(combination)
+            print(f"Encrypted combination added to the database: {combination}")
+            break
+
+    def shift_digits(self, number, shift):
+        """Shifts the digits of a number by the given shift value."""
+        number_str = str(number)
+        shifted_str = ""
+        for digit in number_str:
+            # Shift each digit and wrap it around using modulo 10
+            shifted_digit = (int(digit) + shift) % 10
+            shifted_str += str(shifted_digit)
+        return int(shifted_str)
+
+# Example Usage
+cipher = caeser_cipher()
+cipher.shifty()
+
+# Display the database
+print("Current database:", database)
