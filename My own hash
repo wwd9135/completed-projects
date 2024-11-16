@@ -1,10 +1,67 @@
 # My own hash, used to hash a document file
 #Created from scratch, its a similar style to SHA.
-#Code-
+#Code-This is to get normalized data (word document has next steps.
+
+#This is my hash attempt
+from docx import Document
+
+# Load document
+input_data = Document("human survey prep.docx")
+
+# Extract all the text into a single list or string
+input_text = []
+for paragraph in input_data.paragraphs:
+    input_text.append(paragraph.text)
+
+# Join all paragraphs into one string
+input_text = "\n".join(input_text)
 
 
+class Hash:
+    def __init__(self, input_data):
+        if not input_data.strip():  # Validate non-empty input
+            raise ValueError("Input data cannot be empty.")
+        self.input_data = input_data  # Accept the input (string or binary)
+
+    def conversionto256(self):
+        # Convert content to binary if it's not already
+        binary_content = ''.join(format(ord(char), '08b') for char in self.input_data)
+
+        # Adjust to 256 bits
+        if len(binary_content) < 256:
+            # Pad with zeros if less than 256 bits
+            binary_content = binary_content.ljust(256, '0')
+        elif len(binary_content) > 256:
+            # Truncate if more than 256 bits
+            binary_content = binary_content[:256]
+
+        print("Final normalized input (256 bits):")
+        print(binary_content)
+        return binary_content
+
+    def operations(self, binary_content):
+        chunk_size = 8
+
+        # Break the binary string into chunks
+        chunks = [binary_content[i:i + chunk_size] for i in range(0, len(binary_content), chunk_size)]
+
+        print("Chunks:", chunks)
+
+        # Example: XOR each chunk with a constant
+        constant = int("10101010", 2)
+        processed_chunks = [bin(int(chunk, 2) ^ constant)[2:].zfill(chunk_size) for chunk in chunks]
+
+        print("Processed Chunks:", processed_chunks)
+        return processed_chunks
 
 
+# Instantiate and run the hashing process
+try:
+    hasher = Hash(input_text)
+    binary_content = hasher.conversionto256()
+    processed_output = hasher.operations(binary_content)
+except ValueError as e:
+    print(e)
 
 
 
