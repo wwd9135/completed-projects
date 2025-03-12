@@ -1,2 +1,1 @@
-This is a repository of past programming projects, network or cyber security projects.
-I will be including research papers and my learning/ revision resources Ive created along the way!
+This repository will showcase the majority of my python knowledge and learning to date.
