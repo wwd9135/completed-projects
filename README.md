@@ -1,1 +1,1 @@
-This repository will showcase the majority of my python knowledge and learning to date.
+This repository will showcase my complete/ final iteration products
