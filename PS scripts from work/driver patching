@@ -1,0 +1,162 @@
+# A PSADT script used to deploy missing driver or patches to a users device, deployed using intune with a requirement check to make sure the user doesnt have the patch already.
+
+#>
+
+[CmdletBinding()]
+param
+(
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('Install', 'Uninstall', 'Repair')]
+    [PSDefaultValue(Help = 'Install', Value = 'Install')]
+    [System.String]$DeploymentType,
+
+    [Parameter(Mandatory = $false)]
+    [ValidateSet('Interactive', 'Silent', 'NonInteractive')]
+    [PSDefaultValue(Help = 'Interactive', Value = 'Interactive')]
+    [System.String]$DeployMode,
+
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter]$AllowRebootPassThru,
+
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter]$TerminalServerMode,
+
+    [Parameter(Mandatory = $false)]
+    [System.Management.Automation.SwitchParameter]$DisableLogging
+)
+
+
+##================================================
+## MARK: Variables
+##================================================
+
+$adtSession = @{
+    # App variables.
+    AppVendor = 'Dell'
+    AppName = 'ControlVault3 Drivers'
+    AppVersion = '5.15.14.19'
+    AppArch = ''
+    AppLang = 'EN'
+    AppRevision = '01'
+    AppSuccessExitCodes = @(0)
+    AppRebootExitCodes = @(1641, 3010)
+    AppScriptVersion = '1.0.0'
+    AppScriptDate = '08-10-2025'
+    AppScriptAuthor = 'LH'
+
+    # Install Titles (Only set here to override defaults set by the toolkit).
+    InstallName = ''
+    InstallTitle = ''
+
+    # Script variables.
+    DeployAppScriptFriendlyName = $MyInvocation.MyCommand.Name
+    DeployAppScriptVersion = '4.0.6'
+    DeployAppScriptParameters = $PSBoundParameters
+}
+
+function Install-ADTDeployment
+{
+    ##================================================
+    ## MARK: Pre-Install
+    ##================================================
+    $adtSession.InstallPhase = "Pre-$($adtSession.DeploymentType)"
+
+    ## Show Welcome Message, close Internet Explorer if required, allow up to 3 deferrals, verify there is enough disk space to complete the install, and persist the prompt.
+    Show-ADTInstallationWelcome -CloseProcesses iexplore -AllowDefer -DeferTimes 3 -CheckDiskSpace -PersistPrompt
+
+    ## Show Progress Message (with the default message).
+    Show-ADTInstallationProgress
+
+    ## <Perform Pre-Installation tasks here>
+
+
+
+    ##================================================
+    ## MARK: Install
+    ##================================================
+    $adtSession.InstallPhase = $adtSession.DeploymentType
+
+    ## Handle Zero-Config MSI installations.
+    if ($adtSession.UseDefaultMsi)
+    {
+        $ExecuteDefaultMSISplat = @{ Action = $adtSession.DeploymentType; FilePath = $adtSession.DefaultMsiFile }
+        if ($adtSession.DefaultMstFile)
+        {
+            $ExecuteDefaultMSISplat.Add('Transform', $adtSession.DefaultMstFile)
+        }
+        Start-ADTMsiProcess @ExecuteDefaultMSISplat
+        if ($adtSession.DefaultMspFiles)
+        {
+            $adtSession.DefaultMspFiles | Start-ADTMsiProcess -Action Patch
+        }
+    }
+
+    ## <Perform Installation tasks here>
+
+
+      $Result = Start-ADTProcess -FilePath 'Dell-ControlVault3-Driver-and-Firmware_RKJWJ_WIN64_5.15.14.19_A32_01.exe' -ArgumentList '/S'  -ErrorAction SilentlyContinue -PassThru
+       
+    if ($result.ExitCode -eq 2)
+      {
+    Write-ADTLogEntry -Message "Installation was successful, pending reboot." -Severity 0
+      }
+      else
+      {
+    Write-ADTLogEntry -Message "Installation failed with exit code [$($result.ExitCode)]." -Severity 3
+    Write-ADTLogEntry -Message "Standard Out [$($result.StdOut)]." -Severity 3
+    Write-ADTLogEntry -Message "Standard Error [$($result.StdErr)]." -Severity 3
+      }
+      
+
+
+    ##================================================
+    ## MARK: Post-Install
+    ##================================================
+    $adtSession.InstallPhase = "Post-$($adtSession.DeploymentType)"
+
+    ## <Perform Post-Installation tasks here>
+
+
+    ## Display a message at the end of the install.
+    if (!$adtSession.UseDefaultMsi)
+    {
+    Show-ADTInstallationRestartPrompt -NoCountdown
+    }
+}
+
+function Uninstall-ADTDeployment
+{
+    ##================================================
+    ## MARK: Pre-Uninstall
+    ##================================================
+    $adtSession.InstallPhase = "Pre-$($adtSession.DeploymentType)"
+
+    ## Show Welcome Message, close Internet Explorer with a 60 second countdown before automatically closing.
+    Show-ADTInstallationWelcome -CloseProcesses iexplore -CloseProcessesCountdown 60
+
+    ## Show Progress Message (with the default message).
+    Show-ADTInstallationProgress
+
+    ## <Perform Pre-Uninstallation tasks here>
+
+
+    ##================================================
+    ## MARK: Uninstall
+    ##================================================
+    $adtSession.InstallPhase = $adtSession.DeploymentType
+
+    ## Handle Zero-Config MSI uninstallations.
+    if ($adtSession.UseDefaultMsi)
+    {
+        $ExecuteDefaultMSISplat = @{ Action = $adtSession.DeploymentType; FilePath = $adtSession.DefaultMsiFile }
+        if ($adtSession.DefaultMstFile)
+        {
+            $ExecuteDefaultMSISplat.Add('Transform', $adtSession.DefaultMstFile)
+        }
+        Start-ADTMsiProcess @ExecuteDefaultMSISplat
+    }
+
+    ## <Perform Uninstallation tasks here>
+
+
+    ##================================================
