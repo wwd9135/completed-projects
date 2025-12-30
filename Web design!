@@ -1,3 +1,6 @@
+# This is a basic script from first year of univeristy, I created a GUI to practice web design/ UX and advance my python skills.
+
+
 # todo import libaries, pywebio is the main one used.
 from pywebio.input import *
 from pywebio.output import *
