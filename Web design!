@@ -1,7 +1,7 @@
-# This is a basic script from first year of univeristy, I created a GUI to practice web design/ UX and advance my python skills.
+# This is a basic script from first year of univeristy, I created a GUI to practice web design/ UX skills.
+# Create a virtual enviroment and add pywebio as an interpreter, I've only done this in pycharm I am not aware if vis studio also has this package.
 
 
-# todo import libaries, pywebio is the main one used.
 from pywebio.input import *
 from pywebio.output import *
 import webbrowser
