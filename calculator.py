@@ -1,111 +1,78 @@
-# Calculator GUI using tkinter!!
+# Advanced Calculator GUI using Tkinter.
+# Features: Dynamic button generation, improved structure with classes, and basic error handling.
+# This is still a simple learning project, not intended for production use.
 
+import tkinter as tk
 
-from tkinter import *
+class CalculatorApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Advanced Calculator")
+        self.current_value = ""
+        self.previous_value = ""
+        self.operator = ""
 
-root = Tk()
-root.title("Simple calculator")
+        # Entry widget
+        self.entry = tk.Entry(root, width=35, borderwidth=5, font=("Arial", 14))
+        self.entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
 
-e = Entry(root, width=35, borderwidth=5)
-e.grid(row=0, column=0, columnspan=3, padx=10, pady=10)
+        # Create buttons dynamically
+        self.create_buttons()
 
-# Global variables to store the current value and the operator
-current_value = ""
-previous_value = ""
-operator = ""
+    def create_buttons(self):
+        buttons = [
+            ('7', 1, 0), ('8', 1, 1), ('9', 1, 2), ('/', 1, 3),
+            ('4', 2, 0), ('5', 2, 1), ('6', 2, 2), ('*', 2, 3),
+            ('1', 3, 0), ('2', 3, 1), ('3', 3, 2), ('-', 3, 3),
+            ('0', 4, 0), ('.', 4, 1), ('+', 4, 2), ('=', 4, 3),
+            ('Clear', 5, 0), ('Exit', 5, 3)
+        ]
 
+        for (text, row, col) in buttons:
+            action = lambda x=text: self.on_button_click(x)
+            tk.Button(self.root, text=text, width=10, height=2, command=action).grid(row=row, column=col, padx=5, pady=5)
 
-def addition(a, b):
-    result = float(a) + float(b)
-    return result
-
-def multi(a, b):
-    result = float(a) * float(b)
-    return result
-
-def divide(a, b):
-    if b == "0":  # Prevent division by zero
-        return "Error"
-    result = float(a) / float(b)
-    return result
-
-def subtract(a, b):
-    result = float(a) - float(b)
-    return result
-
-
-def button_click(a, b=None, c=None):
-    global current_value, previous_value, operator
-
-    if c == "clear":  # Clear the entry and reset values
-        current_value = ""
-        previous_value = ""
-        operator = ""
-        e.delete(0, END)
-    elif c == "equals":  # Perform the calculation
-        if operator == "+":
-            result = addition(previous_value, current_value)
-        elif operator == "-":
-            result = subtract(previous_value, current_value)
-        elif operator == "*":
-            result = multi(previous_value, current_value)
-        elif operator == "/":
-            result = divide(previous_value, current_value)
+    def on_button_click(self, char):
+        if char == "Clear":
+            self.current_value = ""
+            self.previous_value = ""
+            self.operator = ""
+            self.entry.delete(0, tk.END)
+        elif char == "Exit":
+            self.root.quit()
+        elif char == "=":
+            try:
+                if self.operator and self.previous_value:
+                    result = self.calculate(float(self.previous_value), float(self.current_value), self.operator)
+                    self.entry.delete(0, tk.END)
+                    self.entry.insert(0, result)
+                    self.current_value = str(result)
+                    self.previous_value = ""
+                    self.operator = ""
+            except Exception:
+                self.entry.delete(0, tk.END)
+                self.entry.insert(0, "Error")
+        elif char in ["+", "-", "*", "/"]:
+            self.operator = char
+            self.previous_value = self.current_value
+            self.current_value = ""
+            self.entry.delete(0, tk.END)
         else:
-            result = "Error"
-        
-        e.delete(0, END)
-        e.insert(0, result)
-        current_value = str(result)  # Store the result for further operations
-        previous_value = ""
-        operator = ""
-    elif c in ["+", "-", "*", "/"]:  # Store operator and current value
-        operator = c
-        previous_value = current_value
-        current_value = ""
-        e.delete(0, END)
-    else:  # Regular number or symbol insertion
-        current_value += str(a)
-        e.delete(0, END)
-        e.insert(0, current_value)
+            self.current_value += str(char)
+            self.entry.delete(0, tk.END)
+            self.entry.insert(0, self.current_value)
 
-# Define buttons
-one = Button(root, text="1", padx=40, pady=20, command=lambda: button_click(1))
-two = Button(root, text="2", padx=40, pady=20, command=lambda: button_click(2))
-three = Button(root, text="3", padx=40, pady=20, command=lambda: button_click(3))
-four = Button(root, text="4", padx=40, pady=20, command=lambda: button_click(4))
-five = Button(root, text="5", padx=40, pady=20, command=lambda: button_click(5))
-six = Button(root, text="6", padx=40, pady=20, command=lambda: button_click(6))
-seven = Button(root, text="7", padx=40, pady=20, command=lambda: button_click(7))
-eight = Button(root, text="8", padx=40, pady=20, command=lambda: button_click(8))
-nine = Button(root, text="9", padx=40, pady=20, command=lambda: button_click(9))
-zero = Button(root, text="0", padx=40, pady=20, command=lambda: button_click(0))
+    def calculate(self, a, b, op):
+        if op == "+":
+            return a + b
+        elif op == "-":
+            return a - b
+        elif op == "*":
+            return a * b
+        elif op == "/":
+            return "Error" if b == 0 else a / b
 
-multy = Button(root, text="*", padx=40, pady=20, command=lambda: button_click(None, None, "*"))
-divi = Button(root, text="/", padx=40, pady=20, command=lambda: button_click(None, None, "/"))
-sub = Button(root, text="-", padx=40, pady=20, command=lambda: button_click(None, None, "-"))
-plus = Button(root, text="+", padx=40, pady=20, command=lambda: button_click(None, None, "+"))
-equals = Button(root, text="=", padx=91, pady=20, command=lambda: button_click(None, None, "equals"))
-clear = Button(root, text="Clear", padx=79, pady=20, command=lambda: button_click(None, None, "clear"))
-
-# Display buttons in the grid
-one.grid(column=0, row=4)
-two.grid(column=1, row=4)
-three.grid(column=2, row=4)
-four.grid(column=0, row=3)
-five.grid(column=1, row=3)
-six.grid(column=2, row=3)
-seven.grid(column=0, row=2)
-eight.grid(column=1, row=2)
-nine.grid(column=2, row=2)
-zero.grid(column=0, row=5)
-
-multy.grid(column=3, row=1)
-divi.grid(column=3, row=2)
-sub.grid(column=3, row=3)
-plus.grid(column=0, row=6)
-equals.grid(columnspan=2, column=1, row=6)
-
-clear.grid(columnspan=2, column=1, row=5)
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CalculatorApp(root)
+    root.mainloop()
