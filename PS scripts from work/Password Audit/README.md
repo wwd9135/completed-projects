@@ -1,4 +1,5 @@
 This script contains relatively simple PowerShell code designed to reset identified weak passwords of windows AD user accounts.
+
 Audit methods to deduce which accounts have weak passwords include the following official tools:
 1/ Microsoft Security Compliance Toolkit 
 2/ DSInternals PowerShell Module
