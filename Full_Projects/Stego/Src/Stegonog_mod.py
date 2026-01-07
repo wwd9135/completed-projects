@@ -1,6 +1,3 @@
-# this module contains the code to handle the stegonography itself
-
-
 import pandas as pd
 import random
 from PIL import Image
