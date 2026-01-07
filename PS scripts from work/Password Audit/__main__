@@ -1,7 +1,7 @@
 # This relatively simple script was built to force users to reset their passwords following audits undergone against all user accounts.
 
 # Assigning the object usernames to the txt file filled with all the users
-$usernames = Get-Content -Path "C:\Scripts\Password_audit\cmpd1\catergorised_by_type\teste.txt"
+$usernames = Get-Content -Path "Src/Data.csv"
 Write-Host "Test: $usernames"
 # Making an object that’s the date of when the script is ran, as a boundary to get rid of recent password changes
 $audit_date = Get-Date -Date "2025-10-22"
@@ -38,7 +38,7 @@ Write-Output "`nThese accounts have been removed `n" $removed
 $failed = @()
  
 # Export list of users to change into a csv
-$UsersToChange | Export-CSV 'C:\scripts\Password_audit\cmpd1\catergorised_by_type\staff_accounts.csv'
+$UsersToChange | Export-CSV 'src/ChangedAccounts.csv'
 $UsersToChange | ForEach-Object {
     $user = $_   # capture the AD user object
  
