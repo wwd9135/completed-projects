@@ -1,5 +1,3 @@
-# This relatively simple script was built to force users to reset their passwords following audits undergone against all user accounts.
-
 # Assigning the object usernames to the txt file filled with all the users
 $usernames = Get-Content -Path "Src/Data.csv"
 Write-Host "Test: $usernames"
