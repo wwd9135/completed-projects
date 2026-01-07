@@ -1,4 +1,4 @@
-MBAM Replacement Solution
+MBAM Replacement Solution:
 This project provides a modern replacement for Microsoft BitLocker Administration and Monitoring (MBAM), which will be deprecated in July 2026.
 
 Key Features
