@@ -1,9 +1,8 @@
 from argparse import ArgumentParser, Namespace
 
 class Cli:
-    def __init__(self):
-        pass
     def Verbose(self, input1,input2):
+        # Lists to hold positive and negative log events.
         Positive: list = []
         Negative: list = []
         # Adding formatting + colours that stand out to grabn the users attention.
