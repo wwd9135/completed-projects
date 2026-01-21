@@ -5,7 +5,7 @@ class Parser:
         self.logName: str = "Pslog.xml"
 
     def parse1(self):
-        tree = ET.parse("MyTestLog.xml")
+        tree = ET.parse("src\MyTestLog.xml")
         root = tree.getroot()
 
         ns = {"ev": "http://schemas.microsoft.com/win/2004/08/events/event"}
@@ -25,10 +25,7 @@ class Parser:
             data_elem = eventdata.find("ev:Data", ns)
             message = data_elem.text if data_elem is not None else None
 
-            #print(event_id, level, provider, timestamp, message)
             VerboseDictionary.append( f"Event ID:{event_id} Time:{timestamp} Message: {message}")
-            #file = with file()
-            
             
         for i in VerboseDictionary:
             if "successfully" in i:
