@@ -35,6 +35,15 @@ As learning progresses, this project will be extended with:
 - Unit tests using pytest
 - Improved error handling and validation
 
+## Reflections
+- This project reinforced the importance of slowing down and doing things properly:
+- Writing modular code from scratch is far easier than retrofitting structure later
+- Type hints force clearer thinking about data flow and responsibilities
+- Separating concerns early makes future testing and extension straightforward
+- Consistent, incremental Git commits reflect real development workflows better than large uploads
+
+It also highlighted gaps in comfort with Python’s core data structures (lists, sets, dictionaries), which is intentional — this project serves as a bridge between theory and practice before deeper work in data structures and algorithms.
+
 ## Motivation & Learning Goals
 This project exists to reinforce fundamentals that actually matter in real engineering work, rather than chasing surface-level features.
 
