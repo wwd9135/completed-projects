@@ -8,14 +8,15 @@ def main():
 
     parser = Parser()
     ParsedData = parser.parse1()
-
+    print(ParsedData)
+    
     # Prepare data for output based on verbosity level given by usern in CLI args
-    VerboseOutput: list[str]= (ParsedData[2])
-    ShortOutput: list[str,str] =  [ParsedData[0], ParsedData[1]]
-    if Arguments == 0:
-        cli.Verbose(VerboseOutput,ShortOutput)
+    #VerboseOutput: list[str]= (New[2])
+   # ShortOutput: list[str,str] =  [New[0], New[1]]
+   # if Arguments == 0:
+    #    cli.Verbose(VerboseOutput,ShortOutput)
         
-    elif Arguments == 1:
-        cli.NonVerbose(ShortOutput)
+    #elif Arguments == 1:
+     #   cli.NonVerbose(ShortOutput)
 
 main()
