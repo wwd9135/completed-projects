@@ -1,18 +1,25 @@
-This script contains relatively simple PowerShell code designed to reset identified weak passwords of windows AD user accounts.
+# Cred-Audit-Toolkit: Local Password & Policy Auditor
 
-Audit methods to deduce which accounts have weak passwords include the following official tools:
-1/ Microsoft Security Compliance Toolkit 
-2/ DSInternals PowerShell Module
-3/ Find non official tools at own risk
+This repository contains a collection of PowerShell-based tools designed to audit local account security, password complexity, and credential hygiene on Windows endpoints. It is intended for Blue Teamers and System Administrators to identify "low-hanging fruit" vulnerabilities that could lead to lateral movement.
 
-**Important considerations:**
-When using the stated audit methods it's important to not store this data in plain text or at all,
-Users will ask advice on why their password is weak, dont oblige as this could be intercepted and allow the users account to be compromised.
 
-Essential pre-requesites:
-__main__.ps1 relies on 'Src' folder having correct input
-Create a CSV of the users AD username & email in two simple columns, add to Src Data.csv
 
-After this in place the script will immediately enable 'Change password at next logon' on all accounts inside Data.csv, and provide a list of successful 
-and unsuccessful additions, review this carefully, naturally if you were to audit a thousand devices like this script was designed for, then you would come across
-servers & locked prod accounts etc perhaps 1-3% of accounts wont be resetted.
+## Security Audit Logic
+The script performs a non-destructive audit of the local Security Accounts Manager (SAM) and evaluates system configurations against common attack vectors:
+
+* **Password Age Analysis:** Identifies stale accounts that haven't rotated credentials in 90+ days.
+* **Administrative Enumeration:** Lists all accounts with local `Administrator` privileges to detect "Admin sprawl."
+* **Reversible Encryption Check:** Queries the registry to ensure `ClearTextPassword` storage is disabled.
+* **Policy Compliance:** Compares local `MinimumPasswordLength` and `PasswordHistoryCount` against the Organization's baseline.
+
+## 🚀 Usage
+
+> **Note:** This script requires **Administrator** privileges to query high-integrity registry keys and account metadata.
+
+```powershell
+# 1. Open PowerShell as Administrator
+# 2. Bypass execution policy for the current session
+Set-ExecutionPolicy Bypass -Scope Process
+
+# 3. Run the audit
+.\PasswordAudit.ps1
