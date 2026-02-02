@@ -32,7 +32,7 @@ Unveil is a desktop GUI application designed to demonstrate secure data concealm
 ---
 
 ## Active Curation Standards
-I am currently refactoring this directory. Projects are moved here from my [Lab-Environment] repository only once they meet the following benchmarks:
+I am currently refactoring this directory. Projects are moved here from my mini_projects repository only once they meet the following benchmarks:
 * **Code Hardening:** Implementation of robust error handling and input sanitization.
 * **Security Review:** Verification of cryptographic standards and secure execution logic.
 * **Technical Documentation:** Comprehensive READMEs including architecture breakdowns and deployment guides.
