@@ -5,8 +5,7 @@ A modern BitLocker administration and PIN management framework designed to repla
 This solution provides a custom GUI for end-user PIN management while enforcing security complexity requirements that exceed the native capabilities of `manage-bde.exe` or `changeBdePin.exe`.
 
 
-
-## 🛠️ Architecture & Core Logic
+## Architecture & Core Logic
 
 The solution is decoupled into a modular framework for better maintainability and security auditing:
 
@@ -17,14 +16,14 @@ The solution is decoupled into a modular framework for better maintainability an
     * Enhanced PIN complexity (preventing sequential or repeating patterns).
     * Validation against known weak/common PIN lists.
 
-## 🚀 Deployment Options
+## Deployment Options
 
 The project is optimized for **Microsoft Intune** deployment using the Win32 app model:
 
 1.  **Automatic Rollout:** Force-deployed to devices missing recovery keys or failing compliance.
 2.  **Self-Service:** Published to the **Company Portal**, allowing users to rotate their own PINs without calling the Helpdesk.
 
-## 🔒 Security Audit & Compliance
+## Security Audit & Compliance
 
 Unlike the native Windows "Change PIN" UI, this tool was built with a focus on compliance-driven environments:
 
@@ -32,7 +31,7 @@ Unlike the native Windows "Change PIN" UI, this tool was built with a focus on c
 * **Audit Logging:** Logs attempts and validation failures to local event logs for SIEM ingestion.
 * **Deprecation Readiness:** Specifically engineered to provide parity with MBAM features (Key Rotation, PIN enforcement) that are being phased out by Microsoft.
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 ├── AppDeployToolkit/    # PSADT core files
