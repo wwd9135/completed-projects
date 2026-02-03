@@ -8,7 +8,7 @@ Rather than relying on generic troubleshooters, these tools interface directly w
 * **Function:** Queries the `Microsoft-Windows-WindowsUpdateClient` provider and system metadata to decipher the current update state.
 * **Key Feature:** Maps raw HRESULT error codes to human-readable remediation steps for common patching failures.
 
-### 2. [Intune-Data-Collection-Suite](./IntuneDataCollection)
+### 2. [Intune-Data-Collection-Suite](./Get-IntuneComplianceReport)
 **Target:** Cloud-Native Fleet Management
 * **Function:** Leverages the Microsoft Graph SDK to perform bulk property retrieval for Intune-managed assets.
 * **Key Feature:** Supports flexible input methods, including full-tenant export or targeted queries via external `.txt` asset lists.
