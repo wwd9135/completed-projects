@@ -2,11 +2,7 @@
 
 This repository serves as a central hub for my technical work, ranging from fundamental logic exercises to production-ready enterprise frameworks. 
 
-<<<<<<< HEAD
-- ([Mini_projects](./Mini_projects)) Mini_projects: This is mainly projects from my learning journey, single file programs, most not being production level purely training exercies.
-=======
 ## Repository Navigation
->>>>>>> 317cfe9210e3170b5feaaa0a14f8ed0c7e5b6faf
 
 ### [PowerShell-Projects](./PowerShell_Projects)
 **Focus:** Enterprise Administration & Security Automation
@@ -23,11 +19,11 @@ Comprehensive, modular projects featuring robust directory structures, error han
 
 ---
 
-## Methodology
+## 📈 Methodology
 My development process follows a three-stage evolution:
 1.  **Exploration:** Practicing new concepts in the `Mini-Projects` sandbox.
 2.  **Implementation:** Solving specific business needs in `PowerShell-Projects`.
 3.  **Refactoring:** Transitioning successful scripts into fully-documented, modular solutions in `Full-Projects`.
 
 ---
-*For my weekly technical journal and lab notes, visit the https://github.com/wwd9135/Learning-path repository.*
+*For my weekly technical journal and lab notes, visit the Learning-path directory at: https://github.com/wwd9135/Learning-path repository.*
