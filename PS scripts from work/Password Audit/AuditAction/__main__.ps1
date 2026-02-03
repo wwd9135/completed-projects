@@ -1,5 +1,5 @@
 # Assigning the object usernames to the txt file filled with all the users
-$usernames = Get-Content -Path "Src/Data.csv"
+$usernames = Get-Content -Path "data.csv"
 Write-Host "Test: $usernames"
 # Making an object that’s the date of when the script is ran, as a boundary to get rid of recent password changes
 $audit_date = Get-Date -Date "2025-10-22"

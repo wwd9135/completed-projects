@@ -1,5 +1,0 @@
-# Output of accounts resetted:
-
-Accounts successfully resetted:
-james.may       james_may@gmail.com
-richard.hammond richard_hammond@gmail.com
