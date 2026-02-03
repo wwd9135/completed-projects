@@ -1,24 +1,26 @@
-# overview
-A lightweight, standalone PowerShell utility designed for SysAdmins and Security Analysts to diagnose Windows Update failures and verify system component integrity.
+# Endpoint-Management-Toolkit
+A collection of specialized PowerShell utilities designed for Enterprise SysAdmins and Security Analysts to automate device auditing and patch diagnostics. 
+Rather than relying on generic troubleshooters, these tools interface directly with the **Microsoft Graph API** and **Windows Event Subsystems** to provide granular visibility into endpoint health.
 
-Unlike generic troubleshooters, this script queries the Windows Event Log (Provider: WindowsUpdateClient) to extract specific HRESULT error codes and maps them to known root causes such as proxy blocks, permission denials, or component store corruption.
+## Included Tools
+### 1. [WinUpdate-Diagnostic-Tool](./UpdateStatus)
+**Target:** Local Endpoint Troubleshooting
+* **Function:** Queries the `Microsoft-Windows-WindowsUpdateClient` provider and system metadata to decipher the current update state.
+* **Key Feature:** Maps raw HRESULT error codes to human-readable remediation steps for common patching failures.
 
-## Features
--Service Health Audit: Verifies the status of wuauserv, bits, cryptsvc, and trustedinstaller.
-- Event Log Parsing: Extracts the last 5 failure events directly from the System log to identify specific Hex error codes.
-- HRESULT Translation: Built-in logic to interpret common codes like 0x80244017 (Proxy/Auth) and 0x80073712 (CBS Corruption).
-- Component Store Check: Inspects the Registry for pending repair flags or "Reboot Pending" states that block update orchestration.
-- Environment Validation: Checks for disk space thresholds and system-level blockers.
-## Installation & Usage
-- Clone the repository:
-  Bashgit clone https://github.com/YOUR-USERNAME/WinUpdate-Diagnostic-Tool.git
-  cd WinUpdate-Diagnostic-Tool
-- Execution:The script requires administrative privileges to query the System Event Logs and Service Manager.
-  Run from an elevated PowerShell prompt:PowerShellSet-ExecutionPolicy Bypass -Scope Process
-.\WUDT.ps1
-## Why this is useful for Security
-From a security perspective, an unpatched system is a vulnerable system. Windows Update failures are often the first sign of:
+### 2. [Intune-Data-Collection-Suite](./IntuneDataCollection)
+**Target:** Cloud-Native Fleet Management
+* **Function:** Leverages the Microsoft Graph SDK to perform bulk property retrieval for Intune-managed assets.
+* **Key Feature:** Supports flexible input methods, including full-tenant export or targeted queries via external `.txt` asset lists.
 
-- Malware Persistence: Certain strains disable wuauserv to prevent security patches.
-- Network Interference: Improperly configured Egress filters or Man-in-the-Middle (MitM) proxies often break the Windows Update handshake.
-- Disk Exhaustion: A common vector for Denial of Service (DoS) at the endpoint level.
+## Key Features
+* **Graph API Integration:** Uses delegated permissions for secure, authenticated data retrieval from Microsoft Endpoint Manager.
+* **Advanced Logging:** All scripts utilize structured error handling to prevent execution hangs during bulk operations.
+* **Standardized Output:** Generates audit-ready CSV reports with timestamps for historical tracking.
+
+## Documentation
+Each script is housed in its own directory with a dedicated README detailing:
+1.  **Required Scopes:** Necessary API permissions (e.g., `DeviceManagementManagedDevices.Read.All`).
+2.  **Usage Syntax:** Command-line examples and parameter descriptions.
+3.  **Dependency Checks:** Automatic verification of the `Microsoft.Graph` module and administrative privileges.
+
