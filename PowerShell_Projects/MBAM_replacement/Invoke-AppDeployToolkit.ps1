@@ -104,7 +104,7 @@ param
 
 $adtSession = @{
     # App variables.
-    AppVendor = 'Met Office'
+    AppVendor = 'WR'
     AppName = 'Set BitLocker Pin'
     AppVersion = ''
     AppArch = ''
