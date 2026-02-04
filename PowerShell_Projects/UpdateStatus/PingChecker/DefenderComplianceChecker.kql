@@ -18,19 +18,19 @@ DeviceNetworkInfo
 Query option 3- Advanced- Gather devices missing certain KBs, 2 or more months worth is ideal as this is the typical industry standard for a device to be considered non-compliant
 
 DeviceTvmSoftwareVulnerabilities
+// Filter for laptop naming convention immediately
+| where DeviceName startswith "lap"
 | where OSPlatform == "Windows11" and SoftwareName == "windows_11"
 | where isnotempty(RecommendedSecurityUpdate)
-// Since there's no Timestamp here, we group by DeviceId first
 | summarize 
     MissingPatchCount = dcount(RecommendedSecurityUpdate), 
     MissingKBs = make_set(RecommendedSecurityUpdate)
     by DeviceId, DeviceName
 | where MissingPatchCount >= 2
-// Now we join with Network Info to get IPs and the "Last Seen" time
 | join kind=inner (
     DeviceNetworkInfo
     | summarize arg_max(Timestamp, *) by DeviceId 
     | project DeviceId, IPAddresses, Timestamp
 ) on DeviceId
 | project DeviceName, MissingPatchCount, MissingKBs, IPAddresses, LastSeen = Timestamp, DeviceId
-| sort by MissingPatchCount asc
+| sort by MissingPatchCount desc
