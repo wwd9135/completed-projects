@@ -45,7 +45,13 @@ Query option 4- Gather ALL devices missing 2 or more months:
 
 DeviceTvmSoftwareVulnerabilities
 // Filter laptop naming convention
-| where DeviceName startswith "lap"
+| where DeviceName has_any (
+    "lapbqjbtb4","lap9zhbtb4","lapdmv9tb4","lap6bf9tb4","lapc6pbtb4",
+    "lapbdk9tb4","lapdhfbtb4","lap9c4btb4","lap3bq9tb4","lap6k4r5x3",
+    "laphb7gp34","lap2l4btb4","lapfd4btb4","lap2tjbtb4","laphl0btb4",
+    "lap2bl9tb4","lap7djbtb4","lap23w9tb4","lap4snbtb4","lap9dg9tb4",
+    "lapjfq9tb4","lap3m0btb4","lapjj0btb4","lap56jbtb4","lap9rjbtb4"
+    )
 | where OSPlatform == "Windows11" and SoftwareName == "windows_11"
 | where isnotempty(RecommendedSecurityUpdate)
 | summarize 
@@ -74,3 +80,5 @@ DeviceTvmSoftwareVulnerabilities
     LoggedOnUsers,
     LastSeen
 | sort by MissingPatchCount desc
+| extend DaysSinceSeen = datetime_diff('day', now(), LastSeen)
+
