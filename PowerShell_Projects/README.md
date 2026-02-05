@@ -33,9 +33,9 @@ This repository contains a collection of **Enterprise Administration & Security 
 * **Outcome:** Ensures all endpoints meet specific security telemetry requirements before accessing corporate resources.
 
 ### [Update-Status](./UpdateStatus/)
-* **Focus:** Automated remediation and patch management.
+* **Focus:** Automated data gathering using KQL/ PowerShell- Ping devices found in KQL queries/ automated remediations.
 * **Implementation:** Diagnostic tools that identify stalled or broken Windows Update agents.
-* **Outcome:** Triggers automated remediation cycles to fix local update components without requiring a full OS wipe.
+* **Outcome:** Combine scripts using Azure automate- triggers automated remediation cycles to fix local update components without requiring a full OS wipe/ device rebuild.
 
 ---
 
