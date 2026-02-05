@@ -44,19 +44,33 @@ DeviceTvmSoftwareVulnerabilities
 Query option 4- Gather ALL devices missing 2 or more months:
 
 DeviceTvmSoftwareVulnerabilities
-// Filter for laptop naming convention immediately
+// Filter laptop naming convention
 | where DeviceName startswith "lap"
 | where OSPlatform == "Windows11" and SoftwareName == "windows_11"
 | where isnotempty(RecommendedSecurityUpdate)
 | summarize 
-    MissingPatchCount = dcount(RecommendedSecurityUpdate), 
+    MissingPatchCount = dcount(RecommendedSecurityUpdate),
     MissingKBs = make_set(RecommendedSecurityUpdate)
     by DeviceId, DeviceName
 | where MissingPatchCount >= 2
+// Join DeviceNetworkInfo for IP + LastSeen
 | join kind=inner (
     DeviceNetworkInfo
-    | summarize arg_max(Timestamp, *) by DeviceId 
-    | project DeviceId, IPAddresses, Timestamp
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, IPAddresses, LastSeen = Timestamp
 ) on DeviceId
-| project DeviceName, MissingPatchCount, MissingKBs, IPAddresses, LastSeen = Timestamp, DeviceId
+// Join DeviceInfo for logged‑on users etc.
+| join kind=inner (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, LoggedOnUsers
+) on DeviceId
+| project 
+    DeviceName,
+    DeviceId,
+    MissingPatchCount,
+    MissingKBs,
+    IPAddresses,
+    LoggedOnUsers,
+    LastSeen
 | sort by MissingPatchCount desc
