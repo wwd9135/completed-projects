@@ -2,106 +2,74 @@
 # It will feed back a simple table showing which devices are reachable and which arent.
 # Tip- it's logical to assess which data you need to scan, if a lot of it is 169.254 or public IPv4's (link local IPv4 addresses) may as well remove them from the data source.
 
-# Requires ImportExcel module: Install-Module ImportExcel -Scope CurrentUser
+# 1. Load the file
 $path = "IPAddresses.xlsx"
 
-# Helper: choose the most useful IP from the JSON array for a device
-function Get-BestIpFromJson {
-    param(
-        [Parameter(Mandatory)]
-        [string]$Json
-    )
-    if ([string]::IsNullOrWhiteSpace($Json)) { return $null }
-
-    try {
-        $arr = $Json | ConvertFrom-Json
-    }
-    catch {
-        # Not valid JSON
-        return $null
-    }
-
-    if (-not $arr) { return $null }
-
-    # Normalize to array in case it's a single object
-    if ($arr -isnot [System.Collections.IEnumerable]) { $arr = @($arr) }
-
-    # Strategy:
-    # 1) Prefer AddressType 'Private' or 'Public'
-    # 2) Else take first non-link-local
-    # 3) Else fall back to first entry
-    $preferred = $arr | Where-Object { $_.AddressType -in @('Private','Public') }
-    if ($preferred) { return $preferred | Select-Object -First 1 }
-
-    $nonLinkLocal = $arr | Where-Object { $_.IPAddress -notlike '169.254.*' }
-    if ($nonLinkLocal) { return $nonLinkLocal | Select-Object -First 1 }
-
-    return $arr | Select-Object -First 1
+if (-not (Test-Path $path)) { 
+    Write-Error "File not found at $path. Please check the file path."
+    return 
 }
 
-# Optional: IPv4 sanity check (since JSON already supplies an IP, this is extra safety)
-$ipv4 = '^(?:\d{1,3}\.){3}\d{1,3}$'
-
-# Import Excel as objects (do NOT pipe to Format-Table)
 $rows = Import-Excel -Path $path
+Write-Host "Found $($rows.Count) rows in the Excel file." -ForegroundColor Cyan
 
+# 2. Process
 $results = foreach ($row in $rows) {
+    # DEBUG: See what PowerShell thinks the columns are named
+    # Write-Host "Checking row for device: $($row.DeviceName)" 
+
     $device = $row.DeviceName
-    $rawJson = $row.IPAddresses
+    $rawJson = $row.IPAddresses 
 
-    $chosen = Get-BestIpFromJson -Json $rawJson
+    $bestIp = $null
+    $reason = "Unknown"
 
-    if (-not $chosen) {
-        [pscustomobject]@{
-            DeviceName   = $device
-            ChosenIP     = $null
-            AddressType  = $null
-            Reachable    = $false
-            Reason       = 'No usable IP / invalid JSON'
-            TimeStamp    = (Get-Date)
+    if ([string]::IsNullOrWhiteSpace($rawJson)) {
+        $reason = "Empty IP Cell"
+    } else {
+        try {
+            # Clean common Excel formatting issues (hidden quotes)
+            $cleanJson = $rawJson.Replace('“', '"').Replace('”', '"').Trim()
+            $ipObjects = $cleanJson | ConvertFrom-Json
+            
+            # Filter for IPv4 (dots) and prioritize Private
+            $bestIpObj = $ipObjects | Where-Object { $_.IPAddress -like '*.*' } | 
+                         Sort-Object { $_.AddressType -eq 'Private' } -Descending | 
+                         Select-Object -First 1
+
+            if ($bestIpObj) {
+                $bestIp = $bestIpObj.IPAddress
+            } else {
+                $reason = "No IPv4 in JSON"
+            }
+        } catch {
+            $reason = "JSON Parse Error"
         }
-        continue
     }
 
-    $ip = $chosen.IPAddress
-    $addrType = $chosen.AddressType
-
-    if ($ip -notmatch $ipv4) {
-        [pscustomobject]@{
-            DeviceName   = $device
-            ChosenIP     = $ip
-            AddressType  = $addrType
-            Reachable    = $false
-            Reason       = 'Not a valid IPv4 format'
-            TimeStamp    = (Get-Date)
+    if ($bestIp) {
+        if (Test-Connection $bestIp -Count 1 -Quiet -ErrorAction SilentlyContinue) {
+            $reachable = $true
+            $reason = "OK"
+        } else {
+            $reachable = $false
+            $reason = "No reply"
         }
-        continue
+    } else {
+        $reachable = $false
     }
-
-    # Skip 169.254.* unless you explicitly want to test link-local
-    if ($ip -like '169.254.*') {
-        [pscustomobject]@{
-            DeviceName   = $device
-            ChosenIP     = $ip
-            AddressType  = $addrType
-            Reachable    = $false
-            Reason       = 'Link-local skipped'
-            TimeStamp    = (Get-Date)
-        }
-        continue
-    }
-
-    $isUp = Test-Connection -TargetName $ip -Count 2 -Quiet -ErrorAction SilentlyContinue
 
     [pscustomobject]@{
-        DeviceName   = $device
-        ChosenIP     = $ip
-        AddressType  = $addrType
-        Reachable    = $isUp
-        Reason       = if ($isUp) { 'OK' } else { 'No reply' }
-        TimeStamp    = (Get-Date)
+        DeviceName = $device
+        ChosenIP   = $bestIp
+        Reachable  = $reachable
+        Reason     = $reason
     }
 }
 
-# Show results
-$results | Sort-Object DeviceName | Format-Table -AutoSize
+# 3. Explicitly output the results
+if ($results) {
+    $results | Sort-Object Reachable | Format-Table -AutoSize
+} else {
+    Write-Warning "The results array is empty. Check if your Excel headers match 'DeviceName' and 'IPAddresses'."
+}
