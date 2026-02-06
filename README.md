@@ -11,6 +11,7 @@ Technical showcases developed during my professional placement. These scripts fo
 ### [Mini-Projects](./Mini_projects)
 **Focus:** Scripting Fundamentals & Logic Practice
 A collection of "Lab" exercises created during my early learning journey. These are primarily single-file programs designed to strengthen core problem-solving skills and syntax familiarity. 
+
 *Note: These are experimental/training exercises and are not intended for production environments.*
 
 ### [Full-Projects](./Full_projects)
