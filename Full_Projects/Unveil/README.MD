@@ -60,7 +60,8 @@ This file handles the core steganography logic, using Least Significant Bit (LSB
 
 - Cryptographic Layer: Implements a binary-level Caesar Cipher that shifts integer values before LSB injection, ensuring the hidden data isn't stored as plain-text ASCII.
 
- **Steganographic Method**
+ **Steganographic Method:**
+
 The changer() method performs the injection by stripping the last bit of a pixel's color channel and replacing it with a data bit. The modified pixels are then re-serialized into a lossless PNG via the Pillow library to prevent compression artifacts from corrupting the payload.
 
  **Architectural Retrospective**
