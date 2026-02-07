@@ -67,3 +67,66 @@ The changer() method performs the injection by stripping the last bit of a pixel
 - Patterns: The current version utilizes "God Classes" where I/O, state management, and processing are tightly coupled.
 
 - Refactor Goal: Future iterations will move away from pandas in favor of direct NumPy array manipulation to improve memory efficiency and processing speed.
+
+# Technical Analysis: Encryption Pipeline
+
+This module implements a multi-stage encryption pipeline, combining classical cipher techniques with modern block-cipher concepts to obscure data within the steganographic container.
+
+### 1. Ingestion & Normalization
+* **Format Agnostic:** Supporting `.txt`, `.img`, and `.docx`, the `Caller` class normalizes all inputs into a raw 8-bit UTF-8 bitstream.
+* **Validation:** Implements binary state-checking to ensure data integrity before passing the stream to the transformation layers.
+
+### 2. Layer 1: Binary Caesar & Shifting
+* **Bit-Level Rotation:** The `Caesar` class applies a modulo-2 shift to the bitstream. This serves as a primary obfuscation layer, controlled by a pseudo-randomly generated shift key.
+
+### 3. Layer 2: SP-Network (Substitution & Permutation)
+The engine introduces **Confusion and Diffusion** by segmenting data into four blocks:
+* **Block Chaining:** Implements inter-block dependency where `Block 2` transformations are mathematically tied to `Block 1` output.
+* **S-Box/P-Box Logic:** * **Substitution:** Utilizes a custom lookup table to disrupt character frequency.
+    * **Permutation:** Reorders bit segments (shuffling positions 1-4) to dissipate plaintext patterns.
+* **Initialization Vector (IV):** A dynamic two-digit IV seeds the initial block transformation, ensuring different outputs for identical inputs.
+
+
+### 4. Layer 3: XOR Hardening & Padding
+* **Block Processing:** Data is processed in **128-bit chunks** and XOR’d against a static 128-bit key.
+* **Randomized Padding:** To maintain a 128-bit block size, the system generates random-bit padding. These "salt" bits are recorded in the encryption header for precise reversal.
+
+### 5. Integrity & Metadata
+* **SHA-256 Digest:** A final hash is generated to serve as an integrity check, allowing the decryptor to verify that no bit-rot occurred during steganographic injection.
+* **Metadata Serialization:** All transformation keys (IV, shift, padding) are exported to `output.txt`, serving as the decryption manifest.
+
+---
+
+### Architectural Retrospective
+* **Critique:** The security currently relies on "Security through Obscurity" via hardcoded keys and random method selection.
+* **Future Refactor:** Planned implementation of **PBKDF2** for key derivation and transitioning to **AES-GCM** for authenticated encryption.
+
+# Technical Analysis: Decryption & Reconstruction Module
+
+This module serves as the inverse engine to the encryption pipeline. It is responsible for parsing the encryption manifest, reversing multi-layer transformations, and validating data integrity.
+
+### 1. Manifest Parsing & Metadata Extraction
+The `TakingInput` method acts as a deserializer for the `output.txt` manifest. It reconstructs the cryptographic state by extracting:
+* **Initialization Vector (IV) & Shift Values:** Retrieves the dynamic keys required to reverse the initial bit-level rotations.
+* **Structural Metadata:** Captures segment lengths and algorithm choices (S-Box vs. P-Box) for each data block to ensure the reconstruction matches the original partitioning.
+* **Padding Recovery:** Identifies trailing random bits used to reach 128-bit block alignment, allowing for clean truncation during final string assembly.
+
+### 2. Inverse Cryptographic Layers
+The decryption follows a strict **Last-In, First-Out (LIFO)** sequence to unwind the transformations:
+* **XOR Reversal:** Re-applies the 128-bit XOR key to the ciphertext. Since XOR is its own inverse, this restores the pre-hardened bitstream.
+* **Inverse Substitution:** Maps characters back to their original values using a mirrored lookup table (Reverse S-Box).
+* **Inverse Permutation:** Re-aligns bit segments using the inverse of the [1, 4, 2, 3] permutation scheme, restoring the original data sequence.
+* **Negative Caesar Shift:** Performs a modulo-2 subtraction based on the recovered shift key to return bits to their original state.
+
+
+
+### 3. Integrity Verification (SHA-256)
+Before the data is finalized, the module performs a **Validation Check**:
+* **Hash Comparison:** Re-hashes the decrypted bitstream and performs a bitwise comparison against the SHA-256 digest stored in the manifest.
+* **Security Guardrail:** If the hashes do not match, the system identifies potential bit-rot or tampering occurred during the steganographic injection/extraction process.
+
+---
+
+### Architectural Retrospective
+* **Critique:** The decryption class mirrors the "God Object" pattern of the encryptor, leading to high functional coupling. 
+* **Refactor Goal:** Future iterations will modularize these inverse functions into a shared `TransformLibrary` to eliminate code duplication between the encryption and decryption binaries.
