@@ -45,9 +45,9 @@ During development, several key engineering hurdles were addressed:
 
 ## Navigation:
 This project is split down into a main file & an encryptor/decryptor which is used to encrypt the data before the stegonography occurs then decrypt once the user inputs their details/token given during stegonography in the GUI.
-- [Main] [./_main_.py]: This file hosts the GUI- it calls on the other two files.
-- [Encryptor] [./Encryptor.py]: Hosts the encryption, essentially a module, class can be called from main and individual functions used from there.
-- [Decryptor] [./Decryptor.py]: Hosts the decryption, takes a token/ credentials and allows the decryption of the users data they initially inputted.
+- [Main] (./_main_.py/): This file hosts the GUI- it calls on the other two files.
+- [Encryptor] (./Encryptor.py/): Hosts the encryption, essentially a module, class can be called from main and individual functions used from there.
+- [Decryptor] (./Decryptor.py/): Hosts the decryption, takes a token/ credentials and allows the decryption of the users data they initially inputted.
 
 ## Technical explanation
 * **Gui app:**
