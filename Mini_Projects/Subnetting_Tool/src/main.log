@@ -22,3 +22,39 @@
 2026-01-14 15:44:36,993 - DEBUG - Final output: {'Subnet Name': 'Marketing', 'Total Host Count': 8190, 'Network address': '192.168.0.1', 'Broadcast address': '192.168.31.255', 'Last usable host': '192.168.31.255', 'Subnet mask': '255.255.0.0'}
 2026-01-14 15:44:36,993 - INFO - Program ended
 -------------------------
+2026-02-02 15:12:23,721 - INFO - Program started
+2026-02-02 15:12:23,721 - DEBUG - Initializing CLI and Subnet modules
+2026-02-02 15:12:23,721 - DEBUG - Running CLI.instantiate()
+2026-02-02 15:12:23,745 - ERROR - Invalid subnet entry: -0
+2026-02-02 15:12:35,445 - INFO - Program started
+2026-02-02 15:12:35,445 - DEBUG - Initializing CLI and Subnet modules
+2026-02-02 15:12:35,445 - DEBUG - Running CLI.instantiate()
+2026-02-02 15:12:35,456 - DEBUG - Parsed subnet dictionary: {'HR': 234}
+2026-02-02 15:12:35,456 - DEBUG - Subnets returned: {'HR': 234}
+2026-02-02 15:12:35,456 - DEBUG - Creating subnet hosts
+2026-02-02 15:12:35,456 - DEBUG - Subnet hosts: {'HR': 254}
+2026-02-02 15:12:35,456 - DEBUG - Running IP addressing
+2026-02-02 15:12:35,459 - INFO - Processing complete
+2026-02-02 15:12:35,459 - DEBUG - Final output: {'Subnet Name': 'HR', 'Total Host Count': 254, 'Network address': '192.168.0.1', 'Broadcast address': '192.168.0.255', 'Last usable host': '192.168.0.255', 'Subnet mask': '255.255.0.0'}
+2026-02-02 15:12:35,459 - INFO - Program ended
+-------------------------
+2026-02-02 15:12:42,840 - INFO - Program started
+2026-02-02 15:12:42,840 - DEBUG - Initializing CLI and Subnet modules
+2026-02-02 15:12:42,840 - DEBUG - Running CLI.instantiate()
+2026-02-02 15:12:42,849 - DEBUG - Parsed subnet dictionary: {'HR': 256}
+2026-02-02 15:12:42,849 - DEBUG - Subnets returned: {'HR': 256}
+2026-02-02 15:12:42,849 - DEBUG - Creating subnet hosts
+2026-02-02 15:12:42,849 - DEBUG - Subnet hosts: {'HR': 510}
+2026-02-02 15:12:42,849 - DEBUG - Running IP addressing
+2026-02-02 15:12:42,849 - INFO - Processing complete
+2026-02-02 15:12:42,849 - DEBUG - Final output: {'Subnet Name': 'HR', 'Total Host Count': 510, 'Network address': '192.168.0.1', 'Broadcast address': '192.168.1.255', 'Last usable host': '192.168.1.255', 'Subnet mask': '255.255.0.0'}
+2026-02-02 15:12:42,849 - INFO - Program ended
+-------------------------
+2026-02-02 15:12:49,370 - INFO - Program started
+2026-02-02 15:12:49,370 - DEBUG - Initializing CLI and Subnet modules
+2026-02-02 15:12:49,370 - DEBUG - Running CLI.instantiate()
+2026-02-02 15:12:49,370 - DEBUG - Parsed subnet dictionary: {'HR': 99999999999999999999999999}
+2026-02-02 15:12:49,370 - DEBUG - Subnets returned: {'HR': 99999999999999999999999999}
+2026-02-02 15:12:49,370 - DEBUG - Creating subnet hosts
+2026-02-02 15:12:49,370 - DEBUG - Subnet hosts: {}
+2026-02-02 15:12:49,370 - DEBUG - Running IP addressing
