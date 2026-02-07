@@ -50,20 +50,20 @@ This project is split down into a main file & an encryptor/decryptor which is us
 - Decryptor.py: Hosts the decryption, takes a token/ credentials and allows the decryption of the users data they initially inputted.
 
 ## Technical explanation
-* **Gui app:**
+**Gui app:**
 This file handles the core steganography logic, using Least Significant Bit (LSB) substitution to hide encrypted data within image pixels.
 
-* **Data Engineering & Pipeline**
+**Data Engineering & Pipeline**
 - Binary Encoding: Converts source text into a continuous 8-bit binary stream, calculating "triplet fits" to map data against RGB channels.
 
 - The Buffer Strategy: Uniquely utilizes a pandas.DataFrame as a structured buffer to manage pixel states. While computationally expensive compared to bytearrays, it allowed for precise tracking of bit-substitution during the prototyping phase.
 
 - Cryptographic Layer: Implements a binary-level Caesar Cipher that shifts integer values before LSB injection, ensuring the hidden data isn't stored as plain-text ASCII.
 
-* **Steganographic Method**
+ **Steganographic Method**
 The changer() method performs the injection by stripping the last bit of a pixel's color channel and replacing it with a data bit. The modified pixels are then re-serialized into a lossless PNG via the Pillow library to prevent compression artifacts from corrupting the payload.
 
-* **Architectural Retrospective**
+ **Architectural Retrospective**
 - Patterns: The current version utilizes "God Classes" where I/O, state management, and processing are tightly coupled.
 
 - Refactor Goal: Future iterations will move away from pandas in favor of direct NumPy array manipulation to improve memory efficiency and processing speed.
