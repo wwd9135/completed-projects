@@ -33,6 +33,7 @@ source venv/bin/activate
 
 ## Usage
 The tool is executed through _main_.py. It requires a path to an XML log file.
+
 **Basic Command:**
 
 - python _main_.py path/to/log.xml
