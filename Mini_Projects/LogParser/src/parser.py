@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 import logging
 
+
 logging.basicConfig(
     level=logging.DEBUG,
     filename='main.log',
@@ -52,7 +53,6 @@ class Parser:
 
     def parse1(self):
         logger = logging.getLogger(__name__)
-
         try:
             tree = ET.parse("src/MyTestLog.xml")
             root = tree.getroot()
