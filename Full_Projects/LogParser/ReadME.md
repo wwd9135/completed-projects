@@ -35,26 +35,29 @@ source venv/bin/activate
 The tool is executed through _main_.py. It requires a path to an XML log file.
 **Basic Command:**
 
-python _main_.py path/to/log.xml
+- python _main_.py path/to/log.xml
 
 **Filter by Event IDs:**
 
-Use the --ids flag followed by one or more integers. Run:
-
-python _main_.py path/to/log.xml --ids 1000 2000
+- Use the --ids flag followed by one or more integers. Run:
+- python _main_.py path/to/log.xml --ids 1000 2000
 
 **Filter by Date:**
 
-Use the --since flag with the format "YYYY-MM-DD HH:MM". Run:
-
-python _main_.py path/to/log.xml --since "2026-01-21 14:30"
+- Use the --since flag with the format "YYYY-MM-DD HH:MM". Run:
+    -python _main_.py path/to/log.xml --since "2026-01-21 14:30"
 
 **Testing:**
 
-The included test suite validates the parser against four specific scenarios: baseline parsing, ID filtering accuracy, chronological cutoff logic, and malformed XML handling. Run:
+The included test suite validates the parser against four specific scenarios: 
+- baseline parsing
+- ID filtering accuracy
+- Chronological cutoff logic
+- Malformed XML handling. 
 
 python test_parser.py
 
 **Logging:**
 
-The application logs debug and error information to main.log. This includes validation of the virtual environment status, file path resolution, and XML parsing exceptions.
+- The application logs debug and error information to main.log.
+- This includes validation of the virtual environment status, file path resolution, and XML parsing exceptions.
