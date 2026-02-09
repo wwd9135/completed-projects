@@ -1,61 +1,50 @@
+from argparse import ArgumentParser, Namespace
 import logging
 import os
-import json
-from argparse import ArgumentParser, Namespace
 
 logger = logging.getLogger(__name__)
 
 class Cli:
     @staticmethod
-    def get_arguments() -> str:
-        """Parses CLI input and validates file existence."""
-        parser = ArgumentParser(
-            description="Windows Event Log XML Parser",
-            usage="python main.py [FileName]"
-        )
-        parser.add_argument("FileName", help="Path to the XML log file", type=str)
+    def get_arguments() -> Namespace:
+        parser = ArgumentParser(description="Windows Event Log XML Parser")
+        parser.add_argument("FileName", help="Path to the XML log file")
         
-        args: Namespace = parser.parse_args()
-        target_file = args.FileName
-
-        # Robustness check: Don't just open the file, check if it exists and is a file
-        if not os.path.isfile(target_file):
-            logger.error(f"File not found or inaccessible: {target_file}")
-            print(f"Error: '{target_file}' is not a valid file path.")
-            raise FileNotFoundError(f"Cannot locate: {target_file}")
-
-        logger.info(f"Target file validated: {target_file}")
-        return target_file
+        # New: Filter by specific Event IDs
+        parser.add_argument(
+            "--ids", 
+            help="Filter for specific Event IDs (e.g., --ids 1000 2000)", 
+            type=int, 
+            nargs='+'
+        )
+        
+        parser.add_argument(
+            "--since", 
+            help="Filter logs from this time (Format: YYYY-MM-DD HH:MM)", 
+            type=str
+        )
+        
+        args = parser.parse_args()
+        
+        if not os.path.isfile(args.FileName):
+            logger.error(f"Target file missing: {args.FileName}")
+            raise FileNotFoundError(f"Cannot locate: {args.FileName}")
+            
+        return args
 
     @staticmethod
     def display_results(data: dict):
-        """
-        Handles the 'Presentation Layer'. 
-        Decouples the printing logic from the parsing logic.
-        """
-        if not data:
-            logger.warning("Display called with empty data.")
-            print("No data to display.")
+        summary = data['summary']
+        print(f"\n--- Results: {summary['total']} Matches Found ---")
+        print(f"Success: {summary['success']} | Failed: {summary['failed']}")
+        
+        if not data['data']:
+            print("No entries match your filters.")
             return
 
-        try:
-            # Polishing the output
-            print("\n" + "="*30)
-            print("   LOG PARSING COMPLETE")
-            print("="*30)
-            
-            # Print Summary
-            summary = data.get("summary", {})
-            print(f"Total Events: {summary.get('total', 0)}")
-            print(f"Successes:    {summary.get('success', 0)}")
-            print(f"Failures:     {summary.get('failed', 0)}")
-            print("-" * 30)
-
-            # Optional: Ask user if they want to see raw JSON
-            show_raw = input("Display raw event data? (y/n): ").lower()
-            if show_raw == 'y':
-                print(json.dumps(data.get("data", []), indent=4))
-
-        except Exception as e:
-            logger.error(f"Output presentation failed: {e}")
-            raise ValueError("Error formatting output display.")
+        print("\n" + "-" * 75)
+        print(f"{'Timestamp':<30} | {'ID':<6} | {'Message'}")
+        print("-" * 75)
+        for entry in data['data']:
+            print(f"{entry['timestamp']:<30} | {entry['event_id']:<6} | {entry['message']}")
+        print("-" * 75)
