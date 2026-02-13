@@ -1,16 +1,19 @@
-# Overview 
-This directory contains my security‑focused coding projects. Two projects are currently included.
+# Overview
+This directory showcases my security‑focused coding projects. It currently includes two tools designed to deepen my understanding of cryptography, Windows internals, and resilient automation.
 
 ## Unveil
-A steganography application that encrypts plaintext using a custom encryption algorithm and embeds the result within an image’s pixels, delivered through a Tkinter GUI I built.
-- The GUI accepts an image and a user‑provided string for encryption.
-- The string is encrypted using a custom algorithm I developed to deepen my understanding of cryptography.
-- All data exists only in session; no database is used to store tokens or payloads, though this could be added in a future version.
-- Decryption also occurs in session, allowing the user to retrieve their data on request
+**Unveil** is a steganography application that encrypts plaintext using a custom algorithm and embeds the ciphertext within an image’s pixel data. The tool is delivered through a Tkinter GUI that I built from scratch.
 
+### Key Features
+- Accepts an image and a user‑provided plaintext string for encryption.
+- Uses a custom encryption algorithm I developed to explore cryptographic concepts.
+- Stores all data only in session — no tokens or payloads are written to disk.
+- Supports in‑session decryption, allowing users to retrieve their embedded data on demand.
 
 ## LogParser
-A resilient Windows event log parser designed for reliability and flexibility.
-- Handles XML event logs, automatically rewriting malformed XML so the parser can process all entries.
-- Supports time‑range filtering, keyword matching, and event ID filtering to optimise analysis.
-- Includes extensive testing to ensure edge cases are handled correctly, with safeguards for invalid filenames, file types, and corrupte
+**LogParser** is a resilient Windows event log parser built for reliability, flexibility, and fault tolerance.
+
+### Key Features
+- Processes XML event logs and automatically repairs malformed XML so all entries can be parsed.
+- Supports time‑range filtering, keyword matching, and event ID filtering to streamline analysis.
+- Includes extensive testing to ensure robust handling of edge cases, including invalid filenames, unsupported file types, and corrupted log data.
